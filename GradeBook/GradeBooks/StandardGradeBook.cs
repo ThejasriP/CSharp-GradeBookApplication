@@ -10,12 +10,10 @@ namespace GradeBook.GradeBooks
 {
     public class StandardGradeBook : BaseGradeBook
     {
-      public StandardGradeBook(BaseGradeBook Type){
-        this.Type = GradeBookType.Standard;     
-}
-      public StandardGradeBook(string name) : base(name)
+      public StandardGradeBook(string name) 
         {
-          
+        name = GradeBookType.Standard;     
+          :base(name)
         }
     }
  }
