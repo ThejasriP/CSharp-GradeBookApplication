@@ -13,7 +13,7 @@ namespace GradeBook.GradeBooks
       
       public RankedGradeBook(string name) :base(name)
         {
-            name = GradeBookType.Ranked;     
+            Type = GradeBookType.Ranked;     
           
         }
     }
