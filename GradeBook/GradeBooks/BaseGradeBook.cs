@@ -19,7 +19,7 @@ namespace GradeBook.GradeBooks
             Name = name;
             Students = new List<Student>();
         }
-        public GradeBooKType Type;
+        public GradeBooKType Type{get; set; };
 
         public void AddStudent(Student student)
         {
