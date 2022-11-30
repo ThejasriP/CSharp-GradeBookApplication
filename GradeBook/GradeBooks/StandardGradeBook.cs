@@ -5,12 +5,12 @@ using System.Text;
 
 namespace GradeBook.GradeBooks
 {
-    class StandardGradeBook : BaseGradeBook
+    public class StandardGradeBook:BaseGradeBook
     {
-        public StandardGradeBook(string name, bool isWheighted) : base(name , isWheighted)
-        {   
-
-            Type = GradeBookType.Standard;
+        
+        public StandardGradeBook(string name, bool val):base(name, val)
+        {
+            this.Type = GradeBookType.Standard;
         }
     }
 }
