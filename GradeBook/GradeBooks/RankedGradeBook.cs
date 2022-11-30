@@ -10,12 +10,11 @@ namespace GradeBook.GradeBooks
 {
     public class RankedGradeBook: BaseGradeBook
     {
-      public RankedGradeBook(BaseGradeBook Type){
-        this.Type = GradeBookType.Ranked;     
-        }
-      public RankedGradeBook(string name) : base(name)
+      
+      public RankedGradeBook(string name)
         {
-          
+          name = GradeBookType.Ranked;     
+          :base(name)
         }
     }
  }
