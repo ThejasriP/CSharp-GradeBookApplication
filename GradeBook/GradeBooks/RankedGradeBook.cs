@@ -1,40 +1,31 @@
-using GradeBook.Enums;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
+using GradeBook.Enums;
+using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GradeBook.GradeBooks
 {
     public class RankedGradeBook : BaseGradeBook
     {
-
         public RankedGradeBook(string name, bool isWeighted) : base(name, isWeighted)
         {
             Type = GradeBookType.Ranked;
         }
 
-        public override char GetLetterGrade(double averageGrade)
-        {
-            if (Students.Count < 5) throw new InvalidOperationException("Need minimium 5 students ");
-
-            var limit = (int)Math.Ceiling(Students.Count * 0.2);
-
-            var grades = Students.OrderByDescending(e => e.AverageGrade).Select(e => e.AverageGrade).ToList();
-
-            if (grades[limit - 1] <= averageGrade) return 'A';
-            else if (grades[(limit * 2) - 1] <= averageGrade) return 'B';
-            else if (grades[(limit * 3) - 1] <= averageGrade) return 'C';
-            else if (grades[(limit * 4) - 1] <= averageGrade) return 'D';
-            else return 'F';
-
-
-        }
-
         public override void CalculateStatistics()
         {
-            if (Students.Count < 5) Console.WriteLine("Ranked grading requires at least 5 students with grades in order to properly calculate a student's overall grade.");
-            else base.CalculateStatistics();
+            if (Students.Count < 5)
+            {
+                Console.WriteLine("Ranked grading requires at least 5 students with grades in order to properly calculate a student's overall grade.");
+            }
+            else
+            {
+                base.CalculateStatistics();
+            }
         }
 
         public override void CalculateStudentStatistics(string name)
@@ -42,15 +33,34 @@ namespace GradeBook.GradeBooks
             if (Students.Count < 5)
             {
                 Console.WriteLine("Ranked grading requires at least 5 students with grades in order to properly calculate a student's overall grade.");
-                return;
             }
-            base.CalculateStudentStatistics(name);
+            else
+            {
+                base.CalculateStudentStatistics(name);
+            }
         }
 
+        public override char GetLetterGrade(double averageGrade)
+        {
+            if (Students.Count < 5)
+                throw new InvalidOperationException();
 
+            var a = Students.Count / 5;
+            var countHigherGrades = Students.FindAll(x => x.AverageGrade > averageGrade).Count;
 
-
-
-
+            switch (countHigherGrades)
+            {
+                case var b when b < a:
+                    return 'A';
+                case var b when b < 2 * a:
+                    return 'B';
+                case var b when b < 3 * a:
+                    return 'C';
+                case var b when b < 4 * a:
+                    return 'D';
+                default:
+                    return 'F';
+            }
+        }
     }
 }
