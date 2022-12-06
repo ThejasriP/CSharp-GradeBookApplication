@@ -11,13 +11,9 @@ namespace GradeBook.GradeBooks
 {
     public abstract class BaseGradeBook
     {
-
         public string Name { get; set; }
         public List<Student> Students { get; set; }
-
         public GradeBookType Type { get; set; }
-
-
         public bool IsWeighted { get; set; }
 
         public BaseGradeBook(string name, bool isWeighted)
@@ -26,8 +22,6 @@ namespace GradeBook.GradeBooks
             IsWeighted = isWeighted;
             Students = new List<Student>();
         }
-
-
 
         public void AddStudent(Student student)
         {
@@ -43,7 +37,7 @@ namespace GradeBook.GradeBooks
             var student = Students.FirstOrDefault(e => e.Name == name);
             if (student == null)
             {
-                Console.WriteLine("student {0} was not found, try again.", name);
+                Console.WriteLine("Student {0} was not found, try again.", name);
                 return;
             }
             Students.Remove(student);
@@ -56,7 +50,7 @@ namespace GradeBook.GradeBooks
             var student = Students.FirstOrDefault(e => e.Name == name);
             if (student == null)
             {
-                Console.WriteLine("student {0} was not found, try again.", name);
+                Console.WriteLine("Student {0} was not found, try again.", name);
                 return;
             }
             student.AddGrade(score);
@@ -69,7 +63,7 @@ namespace GradeBook.GradeBooks
             var student = Students.FirstOrDefault(e => e.Name == name);
             if (student == null)
             {
-                Console.WriteLine("student {0} was not found, try again.", name);
+                Console.WriteLine("Student {0} was not found, try again.", name);
                 return;
             }
             student.RemoveGrade(score);
@@ -113,7 +107,7 @@ namespace GradeBook.GradeBooks
             }
         }
 
-        public virtual int GetGPA(char letterGrade, StudentType studentType)
+        public virtual double GetGPA(char letterGrade, StudentType studentType)
         {
             var gpa = 0;
             switch (letterGrade)
@@ -135,7 +129,10 @@ namespace GradeBook.GradeBooks
                     break;
             }
 
-            if (IsWeighted && studentType == StudentType.Honors || studentType == StudentType.DualEnrolled) gpa++;
+            if (IsWeighted && (studentType == StudentType.Honors || studentType == StudentType.DualEnrolled))
+            {
+                return gpa + 1;
+            }
             return gpa;
         }
 
@@ -188,7 +185,7 @@ namespace GradeBook.GradeBooks
                 }
             }
 
-            //#todo refactor into it's own method with calculations performed here
+            // #todo refactor into it's own method with calculations performed here
             Console.WriteLine("Average Grade of all students is " + (allStudentsPoints / Students.Count));
             if (campusPoints != 0)
                 Console.WriteLine("Average for only local students is " + (campusPoints / Students.Where(e => e.Enrollment == EnrollmentType.Campus).Count()));
@@ -199,11 +196,11 @@ namespace GradeBook.GradeBooks
             if (internationalPoints != 0)
                 Console.WriteLine("Average for only international students is " + (internationalPoints / Students.Where(e => e.Enrollment == EnrollmentType.International).Count()));
             if (standardPoints != 0)
-                Console.WriteLine("Average for students excluding honors and duel enrollment is " + (standardPoints / Students.Where(e => e.Type == StudentType.Standard).Count()));
+                Console.WriteLine("Average for students excluding honors and dual enrollment is " + (standardPoints / Students.Where(e => e.Type == StudentType.Standard).Count()));
             if (honorPoints != 0)
                 Console.WriteLine("Average for only honors students is " + (honorPoints / Students.Where(e => e.Type == StudentType.Honors).Count()));
             if (dualEnrolledPoints != 0)
-                Console.WriteLine("Average for only duel enrolled students is " + (dualEnrolledPoints / Students.Where(e => e.Type == StudentType.DualEnrolled).Count()));
+                Console.WriteLine("Average for only dual enrolled students is " + (dualEnrolledPoints / Students.Where(e => e.Type == StudentType.DualEnrolled).Count()));
         }
 
         public virtual void CalculateStudentStatistics(string name)
@@ -236,11 +233,11 @@ namespace GradeBook.GradeBooks
         }
 
         /// <summary>
-        ///     Converts json to the appropriate grade book type.
+        ///     Converts json to the appropriate gradebook type.
         ///     Note: This method contains code that is not recommended practice.
         ///     This has been used as a compromise to avoid adding additional complexity to the learner.
         /// </summary>
-        /// <returns>The to grade book.</returns>
+        /// <returns>The to gradebook.</returns>
         /// <param name="json">Json.</param>
         public static dynamic ConvertToGradeBook(string json)
         {
@@ -274,7 +271,7 @@ namespace GradeBook.GradeBooks
                              select type).FirstOrDefault();
 
 
-            //protection code
+            // Protection code
             if (gradebook == null)
                 gradebook = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                              from type in assembly.GetTypes()
